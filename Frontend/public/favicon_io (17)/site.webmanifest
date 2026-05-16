@@ -1,0 +1,11 @@
+{
+  "name": "Vinayak 21 Acres",
+  "short_name": "21 Acres",
+  "icons": [
+    { "src": "/favicon_io (17)/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/favicon_io (17)/android-chrome-512x512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "theme_color": "#7B1313",
+  "background_color": "#ffffff",
+  "display": "standalone"
+}
