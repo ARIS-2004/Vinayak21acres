@@ -293,7 +293,7 @@ function ContactForm({ compact = false }: { compact?: boolean }) {
         style={{ background: RED }}
         className="text-white font-semibold py-2.5 rounded text-sm uppercase tracking-wide hover:opacity-90 transition-opacity mt-1 disabled:opacity-70"
       >
-        {loading ? "Sending…" : "Request Callback"}
+        {loading ? "Sending…" : "Call for Site Visit"}
       </button>
     </form>
   );
@@ -313,9 +313,10 @@ function Navbar() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 sm:gap-4">
             <Image src="/logo.png" alt="Vinayak 21 Acres" width={140} height={48} className="object-contain h-12 w-auto" />
-            <span className="text-xs text-gray-500 hidden sm:block">Authorized Channel Partner</span>
+            <span className="hidden sm:block h-8 w-px bg-gray-200" />
+            <Image src="/evernal.png" alt="Evernal Properties — Authorized Channel Partner" width={110} height={40} className="object-contain h-9 w-auto hidden sm:block" />
           </div>
 
           {/* Desktop Nav */}
@@ -328,10 +329,13 @@ function Navbar() {
               </li>
             ))}
             <li>
-              <a href="/Vinayak 21 Acres_Prelaunch Overview-Cmp.pdf" download target="_blank" rel="noopener noreferrer"
-                style={{ background: RED }} className="text-white px-3 py-1.5 rounded text-xs font-semibold hover:opacity-90 transition-opacity">
+              <button
+                onClick={() => window.dispatchEvent(new CustomEvent("open-lead-popup", { detail: { download: true } }))}
+                style={{ background: RED }}
+                className="text-white px-3 py-1.5 rounded text-xs font-semibold hover:opacity-90 transition-opacity"
+              >
                 Download Brochure
-              </a>
+              </button>
             </li>
           </ul>
 
@@ -403,11 +407,11 @@ function Navbar() {
 
           {/* Drawer footer */}
           <div className="px-6 py-6 border-t border-gray-100 space-y-3">
-            <a
-              href="/Vinayak 21 Acres_Prelaunch Overview-Cmp.pdf"
-              download
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => {
+                setMenuOpen(false);
+                window.dispatchEvent(new CustomEvent("open-lead-popup", { detail: { download: true } }));
+              }}
               className="flex items-center justify-center gap-2 text-white py-3.5 rounded-xl font-semibold text-sm w-full hover:opacity-90 transition-opacity"
               style={{ background: RED }}
             >
@@ -416,7 +420,7 @@ function Navbar() {
                 <path d="M8 11a1 1 0 000 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2H8z"/>
               </svg>
               Download Brochure
-            </a>
+            </button>
             <p className="text-center text-[10px] text-gray-400 tracking-wide">New Town · Kolkata · RERA Approved</p>
           </div>
         </div>
@@ -453,17 +457,17 @@ function Hero() {
           >
             Explore Project
           </a>
-          <a
-            href="#price"
+          <button
+            onClick={() => window.dispatchEvent(new CustomEvent("open-lead-popup"))}
             className="text-white border border-white/70 px-8 py-3 font-semibold rounded hover:bg-white/10 transition-colors"
           >
             View Pricing
-          </a>
+          </button>
         </div>
         {/* Key stats */}
         <div className="flex flex-wrap gap-5 sm:gap-8 mt-8">
           {[
-            ["₹71L – 1.01Cr", "Starting Price"],
+            ["₹76L – 1.28Cr", "Starting Price"],
             ["2 & 3 BHK", "Configurations"],
             ["Mar 2032", "Possession"],
             ["G+21", "Floors"],
@@ -521,11 +525,8 @@ function Overview() {
                 </li>
               ))}
             </ul>
-            <a
-              href="/Vinayak 21 Acres_Prelaunch Overview-Cmp.pdf"
-              download
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => window.dispatchEvent(new CustomEvent("open-lead-popup", { detail: { download: true } }))}
               style={{ background: RED }}
               className="inline-flex items-center gap-2 text-white px-8 py-3 font-semibold rounded hover:opacity-90 transition-opacity"
             >
@@ -533,14 +534,14 @@ function Overview() {
                 <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z"/>
               </svg>
               Download Project Brochure
-            </a>
+            </button>
           </div>
         </div>
 
         {/* Project stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16">
           {[
-            ["18.9 Acres", "Land Area"],
+            ["21 Acres", "Land Area"],
             ["10 Blocks", "No. of Blocks"],
             ["749+", "Total Units"],
             ["20%", "Units Sold"],
@@ -704,10 +705,10 @@ function Price() {
               </div>
               <div className="divide-y text-sm">
                 {[
-                  ["Price Range", "₹71L – 1.01Cr"],
+                  ["Price Range", "₹76L – 1.28Cr"],
                   ["Configuration", "2 BHK, 3 BHK"],
                   ["Possession", "March 2032"],
-                  ["Land Area", "18.9 Acres"],
+                  ["Land Area", "21 Acres"],
                   ["Towers", "10 Blocks (G+21)"],
                   ["RERA (Phase 1)", "WBRERA/P/SOU/2026/004147"],
                 ].map(([label, val]) => (
@@ -892,41 +893,132 @@ function Developer() {
 
 /* ── FOOTER ─────────────────────────────────────── */
 function Footer() {
+  const quickLinks = [
+    { label: "Overview", href: "#overview" },
+    { label: "Amenities", href: "#amenities" },
+    { label: "Floor Plans", href: "#floorplans" },
+    { label: "Price", href: "#price" },
+    { label: "Gallery", href: "#gallery" },
+    { label: "Location", href: "#location" },
+  ];
+
   return (
-    <footer style={{ background: "#1a0303" }} className="text-white/70 text-xs py-10">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="flex flex-col md:flex-row justify-between gap-8 mb-8">
-          <div>
-            <Image src="/logo.png" alt="Vinayak 21 Acres" width={120} height={40} className="object-contain mb-3 brightness-0 invert" />
-            <p className="max-w-xs leading-relaxed">
-              Premium residential township in New Town, Kolkata. Authorized Channel Partner.
+    <footer style={{ background: "#120202" }} className="text-white/60 relative overflow-hidden">
+      {/* Red top accent */}
+      <div style={{ background: RED }} className="h-[3px] w-full" />
+
+      {/* Subtle background texture */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        backgroundImage: "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(123,19,19,0.18) 0%, transparent 70%)"
+      }} />
+
+      <div className="relative max-w-7xl mx-auto px-6 pt-14 pb-10">
+
+        {/* Main grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+
+          {/* Col 1 — Brand */}
+          <div className="lg:col-span-1">
+            <Image
+              src="/logo.png"
+              alt="Vinayak 21 Acres"
+              width={130}
+              height={44}
+              className="object-contain mb-4 brightness-0 invert"
+            />
+            <p className="text-white/50 text-sm leading-relaxed mb-5">
+              Premium residential township in New Town, Kolkata. Experience elevated living across 21 curated acres.
             </p>
+            <div className="inline-flex items-center gap-3 px-4 py-2.5 rounded-lg border border-white/10" style={{ background: "rgba(255,255,255,0.03)" }}>
+              <span className="text-[9px] tracking-[0.2em] uppercase text-white/40 leading-tight">Marketed by</span>
+              <span className="block h-6 w-px bg-white/15" />
+              <Image src="/evernal.png" alt="Evernal Properties" width={110} height={36} className="object-contain h-8 w-auto brightness-0 invert opacity-90" />
+            </div>
           </div>
+
+          {/* Col 2 — Contact */}
           <div>
-            <h4 className="text-white font-semibold mb-3 text-sm">RERA Registration</h4>
-            <p>Phase 1: WBRERA/P/SOU/2026/004147</p>
-            <p>Phase 2: WBRERA/P/SOU/2026/004275</p>
-            <a href="https://rera.wb.gov.in" target="_blank" rel="noopener noreferrer" className="text-red-400 hover:text-red-300 mt-1 block">
-              rera.wb.gov.in
-            </a>
+            <p className="text-white text-[11px] font-semibold tracking-[0.2em] uppercase mb-5" style={{ color: "rgba(255,255,255,0.9)" }}>
+              Contact Us
+            </p>
+            <div className="space-y-4 text-sm">
+              <div className="flex items-start gap-3">
+                <svg className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: RED }} fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                </svg>
+                <div>
+                  <a href="tel:+919123361286" className="text-white/70 hover:text-white transition-colors block">+91 91233 61286</a>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <svg className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: RED }} fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"/>
+                </svg>
+                <span className="text-white/60 leading-relaxed">Off New Town Action Area III,<br />Kolkata – 700156</span>
+              </div>
+            </div>
           </div>
+
+          {/* Col 3 — Quick Links */}
           <div>
-            <h4 className="text-white font-semibold mb-3 text-sm">Quick Links</h4>
-            <div className="flex flex-col gap-1.5">
-              {["overview", "amenities", "price", "gallery", "location"].map(link => (
-                <a key={link} href={`#${link}`} className="hover:text-white capitalize transition-colors">{link}</a>
+            <p className="text-white text-[11px] font-semibold tracking-[0.2em] uppercase mb-5" style={{ color: "rgba(255,255,255,0.9)" }}>
+              Quick Links
+            </p>
+            <div className="flex flex-col gap-2.5">
+              {quickLinks.map(({ label, href }) => (
+                <a
+                  key={href}
+                  href={href}
+                  className="group flex items-center gap-2 text-sm text-white/55 hover:text-white transition-colors"
+                >
+                  <span className="block w-3 h-px transition-all duration-300 group-hover:w-5" style={{ background: RED }} />
+                  {label}
+                </a>
               ))}
             </div>
           </div>
+
+          {/* Col 4 — RERA */}
+          <div>
+            <p className="text-white text-[11px] font-semibold tracking-[0.2em] uppercase mb-5" style={{ color: "rgba(255,255,255,0.9)" }}>
+              RERA Registration
+            </p>
+            <div className="space-y-3 text-sm">
+              <div className="rounded-lg border border-white/8 px-4 py-3" style={{ background: "rgba(255,255,255,0.03)" }}>
+                <p className="text-white/35 text-[10px] uppercase tracking-widest mb-1">Phase 1</p>
+                <p className="text-white/70 font-mono text-xs">WBRERA/P/SOU/2026/004147</p>
+              </div>
+              <div className="rounded-lg border border-white/8 px-4 py-3" style={{ background: "rgba(255,255,255,0.03)" }}>
+                <p className="text-white/35 text-[10px] uppercase tracking-widest mb-1">Phase 2</p>
+                <p className="text-white/70 font-mono text-xs">WBRERA/P/SOU/2026/004275</p>
+              </div>
+              <a
+                href="https://rera.wb.gov.in"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs hover:text-white transition-colors mt-1"
+                style={{ color: "#e07070" }}
+              >
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                </svg>
+                rera.wb.gov.in
+              </a>
+            </div>
+          </div>
+
         </div>
-        <div className="border-t border-white/10 pt-6 text-center">
-          <p className="leading-relaxed max-w-4xl mx-auto">
-            Disclaimer: This document does not constitute an offer, contract, agreement, or transaction of any nature.
-            All layout plans are for illustrative purposes only. Project design, planning, amenities and phasing are
-            subject to statutory approvals. Refer to WBRERA website for complete project information. T&C Apply.
+
+        {/* Divider */}
+        <div className="border-t border-white/8 pt-7">
+          <p className="text-white/30 text-[11px] leading-relaxed text-center max-w-4xl mx-auto mb-4">
+            <span className="text-white/40 font-medium">Disclaimer:</span> This document does not constitute an offer, contract, agreement, or transaction of any nature. All layout plans are for illustrative purposes only. Project design, planning, amenities and phasing are subject to statutory approvals. Refer to WBRERA website for complete project information. T&amp;C Apply.
           </p>
-          <p className="mt-3">© 2026 Vinayak Group. All rights reserved.</p>
+          <p className="text-center text-white/25 text-[11px] tracking-wide">
+            © 2026 Vinayak Group. All rights reserved.
+          </p>
         </div>
+
       </div>
     </footer>
   );
@@ -938,7 +1030,7 @@ function FloatingButtons() {
     <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
       {/* WhatsApp */}
       <a
-        href="https://wa.me/919073443322"
+        href="https://wa.me/919123361286"
         target="_blank"
         rel="noopener noreferrer"
         className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
@@ -951,7 +1043,7 @@ function FloatingButtons() {
       </a>
       {/* Call */}
       <a
-        href="tel:+919073443322"
+        href="tel:+919123361286"
         className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform bg-gray-900"
         aria-label="Call"
       >
@@ -993,15 +1085,12 @@ function VideoSection() {
           >
             Explore Project
           </a>
-          <a
-            href="/Vinayak 21 Acres_Prelaunch Overview-Cmp.pdf"
-            download
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={() => window.dispatchEvent(new CustomEvent("open-lead-popup", { detail: { download: true } }))}
             className="text-white border border-white/60 px-8 py-3 font-semibold rounded hover:bg-white/10 transition-colors"
           >
             Download Brochure
-          </a>
+          </button>
         </div>
       </div>
     </section>
@@ -1263,36 +1352,38 @@ function FloorPlans() {
 }
 
 /* ── SITE VISIT POPUP ───────────────────────────── */
+const BROCHURE_PATH = "/Vinayak 21 Acres_Prelaunch Overview-Cmp.pdf";
+
 function SiteVisitPopup() {
   const [show, setShow] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  function scheduleShow() {
-    if (timerRef.current) clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => setShow(true), 3 * 60 * 1000);
-  }
+  const [downloadAfter, setDownloadAfter] = useState(false);
+  const autoShownRef = useRef(false);
 
   useEffect(() => {
-    let started = false;
     function onScroll() {
-      if (!started) {
-        started = true;
-        scheduleShow();
-      }
+      if (autoShownRef.current) return;
+      autoShownRef.current = true;
+      window.removeEventListener("scroll", onScroll);
+      setTimeout(() => setShow(true), 1500);
+    }
+    function onOpenEvent(e: Event) {
+      const ev = e as CustomEvent<{ download?: boolean }>;
+      setDownloadAfter(ev.detail?.download === true);
+      setShow(true);
     }
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("open-lead-popup", onOpenEvent as EventListener);
     return () => {
       window.removeEventListener("scroll", onScroll);
-      if (timerRef.current) clearTimeout(timerRef.current);
+      window.removeEventListener("open-lead-popup", onOpenEvent as EventListener);
     };
   }, []);
 
   function handleClose() {
     setShow(false);
-    scheduleShow();
   }
 
   if (!show) return null;
@@ -1313,7 +1404,7 @@ function SiteVisitPopup() {
             <p className="text-white font-bold text-lg leading-tight">Vinayak 21 Acres</p>
             <p className="text-white/80 text-xs mt-1">75% Open-to-Sky · G+21</p>
             <div className="flex flex-wrap gap-2 mt-3">
-              {["₹71L Onwards", "2 & 3 BHK", "RERA Approved"].map(tag => (
+              {["₹76L Onwards", "2 & 3 BHK", "RERA Approved"].map(tag => (
                 <span key={tag} className="bg-white/20 backdrop-blur-sm text-white text-[10px] px-2 py-0.5 rounded-full font-medium">
                   {tag}
                 </span>
@@ -1330,10 +1421,16 @@ function SiteVisitPopup() {
                 <svg className="w-4 h-4" style={{ color: RED }} fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"/>
                 </svg>
-                <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: RED }}>Exclusive Offer</span>
+                <span className="text-xs font-semibold uppercase tracking-widest" style={{ color: RED }}>
+                  {downloadAfter ? "Instant Download" : "Exclusive Offer"}
+                </span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900">Book A Site Visit</h3>
-              <p className="text-gray-500 text-xs mt-0.5">Experience the project first-hand.</p>
+              <h3 className="text-xl font-bold text-gray-900">
+                {downloadAfter ? "Download Project Brochure" : "Book A Site Visit"}
+              </h3>
+              <p className="text-gray-500 text-xs mt-0.5">
+                {downloadAfter ? "Fill in your details to download the brochure." : "Experience the project first-hand."}
+              </p>
             </div>
             <button onClick={handleClose} className="text-gray-300 hover:text-gray-500 text-2xl leading-none ml-2 flex-shrink-0">×</button>
           </div>
@@ -1346,7 +1443,11 @@ function SiteVisitPopup() {
                 </svg>
               </div>
               <p className="font-bold text-gray-900">Thank you!</p>
-              <p className="text-sm text-gray-500 mt-1">Our team will contact you shortly to confirm your visit.</p>
+              <p className="text-sm text-gray-500 mt-1">
+                {downloadAfter
+                  ? "Your brochure download has started. Our team will also reach out shortly."
+                  : "Our team will contact you shortly to confirm your visit."}
+              </p>
             </div>
           ) : (
             <form onSubmit={async e => {
@@ -1363,6 +1464,15 @@ function SiteVisitPopup() {
               } finally {
                 setLoading(false);
                 setSubmitted(true);
+                if (downloadAfter) {
+                  const link = document.createElement("a");
+                  link.href = BROCHURE_PATH;
+                  link.download = "Vinayak 21 Acres - Brochure.pdf";
+                  link.target = "_blank";
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }
               }
             }} className="flex flex-col gap-2.5">
               <input
@@ -1407,7 +1517,7 @@ function SiteVisitPopup() {
                 style={{ background: RED }}
                 className="text-white font-semibold py-3 rounded-lg text-sm uppercase tracking-wider hover:opacity-90 transition-opacity disabled:opacity-70"
               >
-                {loading ? "Sending…" : "Book A Site Visit"}
+                {loading ? "Sending…" : downloadAfter ? "Download Brochure" : "Book A Site Visit"}
               </button>
             </form>
           )}

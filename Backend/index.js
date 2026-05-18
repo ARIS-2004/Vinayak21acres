@@ -59,7 +59,7 @@ function clientThankYouHtml(name, isSiteVisit = false) {
               <p style="margin:0 0 14px;color:#7B1313;font-size:13px;font-weight:bold;text-transform:uppercase;letter-spacing:1px">Why Vinayak 21 Acres?</p>
               ${[
                 '21 Acres of Premium Township',
-                '2 &amp; 3 BHK Starting &#8377;71 Lakhs',
+                '2 &amp; 3 BHK Starting &#8377;76 Lakhs',
                 'IGBC Precertified Platinum Green Building',
                 '75% Open-to-Sky | 3-Acre Central Park',
                 'G+21 Towers | RERA Registered',
@@ -75,7 +75,7 @@ function clientThankYouHtml(name, isSiteVisit = false) {
 
           <p style="margin:0 0 8px;color:#555;font-size:14px;line-height:1.7">If you have any immediate queries, feel free to reach out:</p>
           <p style="margin:0 0 24px;color:#555;font-size:14px;line-height:1.7">
-            &#128222; <strong>+91 98300 00000</strong>
+            &#128222; <strong>+91 91233 61286</strong>
           </p>
 
           <p style="margin:0;color:#888;font-size:13px;line-height:1.6">Warm regards,<br><strong style="color:#1a1a1a">The Vinayak 21 Acres Sales Team</strong></p>
