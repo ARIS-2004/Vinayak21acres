@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { countries, flag, type Country } from "./countries";
 
 const RED = "#7B1313";
@@ -839,9 +840,9 @@ function CountrySelect({
 
 /* ── HERO ENQUIRY FORM (Sidebar) ─────────────────── */
 function HeroEnquiryForm() {
+  const router = useRouter();
   const [form, setForm] = useState({ name: "", email: "", phone: "" });
   const [country, setCountry] = useState<Country>(countries[0]);
-  const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -857,17 +858,15 @@ function HeroEnquiryForm() {
         }),
       });
     } catch {
-      // show success even on network error
-    } finally {
-      setLoading(false);
-      setSubmitted(true);
+      // navigate to thank-you even on network error
     }
+    router.push("/thank-you");
   }
 
   return (
     <div className="relative">
       <div
-        className="rounded-2xl p-5 shadow-xl relative overflow-hidden"
+        className="rounded-2xl p-7 shadow-xl relative overflow-hidden"
         style={{
           background:
             "linear-gradient(160deg, #fcd34d 0%, #fb923c 60%, #f97316 100%)",
@@ -875,7 +874,7 @@ function HeroEnquiryForm() {
       >
         {/* Soft decorative glow */}
         <div
-          className="absolute -top-10 -right-10 w-32 h-32 rounded-full pointer-events-none"
+          className="absolute -top-10 -right-10 w-40 h-40 rounded-full pointer-events-none"
           style={{
             background:
               "radial-gradient(circle, rgba(255,255,255,0.25) 0%, transparent 70%)",
@@ -883,80 +882,51 @@ function HeroEnquiryForm() {
         />
 
         <div className="relative">
-          <h3 className="text-gray-900 text-xl font-bold leading-tight mb-1 text-center">
+          <h3 className="text-gray-900 text-2xl font-bold leading-tight mb-1.5 text-center">
             Get Expert Assistance
           </h3>
-          <p className="text-[11px] text-gray-900/60 text-center mb-5">
+          <p className="text-xs text-gray-900/65 text-center mb-6">
             Free site visit · No commission
           </p>
 
-          {submitted ? (
-            <div className="bg-white/40 backdrop-blur-sm rounded-xl p-5 text-center">
-              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center mx-auto mb-2">
-                <svg
-                  className="w-5 h-5"
-                  style={{ color: RED }}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2.5}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </div>
-              <p className="font-bold text-gray-900 text-sm">Thank you!</p>
-              <p className="text-xs text-gray-800 mt-1">
-                Our expert will reach out shortly.
-              </p>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <input
+              required
+              placeholder="Name"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              className="bg-white/50 backdrop-blur-sm rounded-lg px-4 py-3 text-gray-900 placeholder-gray-900/55 text-base focus:outline-none focus:bg-white/70 focus:ring-2 focus:ring-white/60 transition-all"
+            />
+            <input
+              required
+              type="email"
+              placeholder="Email Address"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              className="bg-white/50 backdrop-blur-sm rounded-lg px-4 py-3 text-gray-900 placeholder-gray-900/55 text-base focus:outline-none focus:bg-white/70 focus:ring-2 focus:ring-white/60 transition-all"
+            />
+            <div className="flex items-center gap-2.5 bg-white/50 backdrop-blur-sm rounded-lg px-4 py-3 focus-within:bg-white/70 focus-within:ring-2 focus-within:ring-white/60 transition-all">
+              <CountrySelect value={country} onChange={setCountry} />
+              <span className="w-px h-5 bg-gray-900/20" />
+              <input
+                required
+                type="tel"
+                placeholder="98765 43210"
+                value={form.phone}
+                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                className="bg-transparent text-gray-900 placeholder-gray-900/55 text-base focus:outline-none flex-1 min-w-0"
+              />
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
-              <input
-                required
-                placeholder="Name"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="bg-white/40 backdrop-blur-sm rounded-lg px-3 py-2.5 text-gray-900 placeholder-gray-900/55 text-sm focus:outline-none focus:bg-white/60 focus:ring-2 focus:ring-white/50 transition-all"
-              />
-              <input
-                required
-                type="email"
-                placeholder="Email Address"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="bg-white/40 backdrop-blur-sm rounded-lg px-3 py-2.5 text-gray-900 placeholder-gray-900/55 text-sm focus:outline-none focus:bg-white/60 focus:ring-2 focus:ring-white/50 transition-all"
-              />
-              <div className="flex items-center gap-2 bg-white/40 backdrop-blur-sm rounded-lg px-3 py-2.5 focus-within:bg-white/60 focus-within:ring-2 focus-within:ring-white/50 transition-all">
-                <CountrySelect value={country} onChange={setCountry} />
-                <span className="w-px h-4 bg-gray-900/20" />
-                <input
-                  required
-                  type="tel"
-                  placeholder="98765 43210"
-                  value={form.phone}
-                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  className="bg-transparent text-gray-900 placeholder-gray-900/55 text-sm focus:outline-none flex-1 min-w-0"
-                />
-              </div>
 
-              <p className="text-[10px] text-gray-900/65 leading-snug -mt-0.5">
-                We'll send an OTP to verify your number.
-              </p>
-
-              <button
-                type="submit"
-                disabled={loading}
-                style={{ background: RED }}
-                className="text-white font-bold py-3 rounded-lg text-[13px] uppercase tracking-wider hover:opacity-90 transition-opacity disabled:opacity-70 shadow-lg mt-1"
-              >
-                {loading ? "Sending…" : "Request Callback"}
-              </button>
-            </form>
-          )}
+            <button
+              type="submit"
+              disabled={loading}
+              style={{ background: RED }}
+              className="text-white font-bold py-3.5 rounded-lg text-sm uppercase tracking-wider hover:opacity-90 transition-opacity disabled:opacity-70 shadow-lg mt-2"
+            >
+              {loading ? "Sending…" : "Request Callback"}
+            </button>
+          </form>
         </div>
       </div>
     </div>
@@ -2118,6 +2088,7 @@ function FloorPlans() {
 const BROCHURE_PATH = "/Vinayak 21 Acres_Prelaunch Overview-Cmp.pdf";
 
 function SiteVisitPopup() {
+  const router = useRouter();
   const [show, setShow] = useState(false);
   const [form, setForm] = useState({
     name: "",
@@ -2125,7 +2096,6 @@ function SiteVisitPopup() {
     phone: "",
     message: "",
   });
-  const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [downloadAfter, setDownloadAfter] = useState(false);
   const autoShownRef = useRef(false);
@@ -2234,35 +2204,7 @@ function SiteVisitPopup() {
             </button>
           </div>
 
-          {submitted ? (
-            <div className="flex-1 flex flex-col items-center justify-center text-center py-8">
-              <div
-                className="w-12 h-12 rounded-full flex items-center justify-center mb-3"
-                style={{ background: PINK_BG }}
-              >
-                <svg
-                  className="w-6 h-6"
-                  style={{ color: RED }}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </div>
-              <p className="font-bold text-gray-900">Thank you!</p>
-              <p className="text-sm text-gray-500 mt-1">
-                {downloadAfter
-                  ? "Your brochure download has started. Our team will also reach out shortly."
-                  : "Our team will contact you shortly to confirm your visit."}
-              </p>
-            </div>
-          ) : (
+          {(
             <form
               onSubmit={async (e) => {
                 e.preventDefault();
@@ -2277,20 +2219,18 @@ function SiteVisitPopup() {
                     },
                   );
                 } catch {
-                  // show success even on network error
-                } finally {
-                  setLoading(false);
-                  setSubmitted(true);
-                  if (downloadAfter) {
-                    const link = document.createElement("a");
-                    link.href = BROCHURE_PATH;
-                    link.download = "Vinayak 21 Acres - Brochure.pdf";
-                    link.target = "_blank";
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                  }
+                  // navigate even on network error
                 }
+                if (downloadAfter) {
+                  const link = document.createElement("a");
+                  link.href = BROCHURE_PATH;
+                  link.download = "Vinayak 21 Acres - Brochure.pdf";
+                  link.target = "_blank";
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }
+                router.push("/thank-you");
               }}
               className="flex flex-col gap-2.5"
             >
@@ -2618,7 +2558,7 @@ export default function Home() {
       <Navbar />
 
       {/* Left content — shifted right on desktop to make room for the fixed sidebar */}
-      <div className="lg:mr-[320px] xl:mr-[360px]">
+      <div className="lg:mr-[380px] xl:mr-[420px]">
         <main className="pt-16">
           <Hero />
 
@@ -2643,7 +2583,7 @@ export default function Home() {
       </div>
 
       {/* Fixed right sidebar — always visible on desktop */}
-      <aside className="hidden lg:flex fixed right-0 top-16 bottom-0 w-[340px] xl:w-[380px] flex-col p-6 bg-gray-50 border-l border-gray-100 overflow-y-auto z-30">
+      <aside className="hidden lg:flex fixed right-0 top-16 bottom-0 w-[380px] xl:w-[420px] flex-col p-6 bg-gray-50 border-l border-gray-100 overflow-y-auto z-30">
         <HeroEnquiryForm />
       </aside>
 
