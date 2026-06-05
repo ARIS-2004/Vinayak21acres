@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-const FAVICON = "/favicon_io (17)";
+const FAVICON = "/favicons";
 const GTM_ID = "GTM-55LJVP5D";
 
 export const metadata: Metadata = {
